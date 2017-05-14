@@ -3,6 +3,7 @@ package com.baconcow.mariobros.screens;
 import com.baconcow.mariobros.MarioBros;
 import com.baconcow.mariobros.Scenes.Hud;
 import com.baconcow.mariobros.sprite.Mario;
+import com.baconcow.mariobros.tools.B2WorldCreator;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -89,62 +90,7 @@ public class PlayScreen implements Screen {
         player = new Mario(world);
         b2dr = new Box2DDebugRenderer();
 
-        BodyDef bdef = new BodyDef();
-        PolygonShape shape = new PolygonShape();
-        FixtureDef fdef = new FixtureDef();
-
-        Body body;
-
-        for(MapObject obj : map.getLayers().get(2).getObjects().getByType(RectangleMapObject.class)){
-            Rectangle rect = ((RectangleMapObject) obj).getRectangle();
-
-            bdef.type = BodyDef.BodyType.StaticBody;
-            bdef.position.set((rect.getX()+ rect.getWidth()/2)/ MarioBros.PPM, (rect.getY()+rect.getHeight()/2)/ MarioBros.PPM);
-
-            body = world.createBody(bdef);
-
-            shape.setAsBox((rect.getWidth()/2)/ MarioBros.PPM, (rect.getHeight()/2)/ MarioBros.PPM);
-            fdef.shape = shape;
-            body.createFixture(fdef);
-        }
-        //pipes
-        for(MapObject obj : map.getLayers().get(3).getObjects().getByType(RectangleMapObject.class)){
-            Rectangle rect = ((RectangleMapObject) obj).getRectangle();
-
-            bdef.type = BodyDef.BodyType.StaticBody;
-            bdef.position.set((rect.getX()+ rect.getWidth()/2)/ MarioBros.PPM, (rect.getY()+rect.getHeight()/2)/ MarioBros.PPM);
-
-            body = world.createBody(bdef);
-
-            shape.setAsBox((rect.getWidth()/2)/ MarioBros.PPM, (rect.getHeight()/2)/ MarioBros.PPM);
-            fdef.shape = shape;
-            body.createFixture(fdef);
-        }
-
-        for(MapObject obj : map.getLayers().get(5).getObjects().getByType(RectangleMapObject.class)){
-            Rectangle rect = ((RectangleMapObject) obj).getRectangle();
-
-            bdef.type = BodyDef.BodyType.StaticBody;
-            bdef.position.set((rect.getX()+ rect.getWidth()/2)/ MarioBros.PPM, (rect.getY()+rect.getHeight()/2)/ MarioBros.PPM);
-
-            body = world.createBody(bdef);
-
-            shape.setAsBox((rect.getWidth()/2)/ MarioBros.PPM, (rect.getHeight()/2)/ MarioBros.PPM);
-            fdef.shape = shape;
-            body.createFixture(fdef);
-        }
-        for(MapObject obj : map.getLayers().get(4).getObjects().getByType(RectangleMapObject.class)){
-            Rectangle rect = ((RectangleMapObject) obj).getRectangle();
-
-            bdef.type = BodyDef.BodyType.StaticBody;
-            bdef.position.set((rect.getX()+ rect.getWidth()/2)/ MarioBros.PPM, (rect.getY()+rect.getHeight()/2)/ MarioBros.PPM);
-
-            body = world.createBody(bdef);
-
-            shape.setAsBox((rect.getWidth()/2)/ MarioBros.PPM, (rect.getHeight()/2)/ MarioBros.PPM);
-            fdef.shape = shape;
-            body.createFixture(fdef);
-        }
+        new B2WorldCreator(world, map);
     }
 
     @Override
@@ -187,6 +133,10 @@ public class PlayScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        map.dispose();
+        renderer.dispose();
+        world.dispose();
+        b2dr.dispose();
+        hud.dispose();
     }
 }
