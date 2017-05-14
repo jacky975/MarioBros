@@ -36,19 +36,18 @@ public class Mario extends Sprite {
         runningRight = true;
 
         Array<TextureRegion> frames = new Array<TextureRegion>();
-        for(int i = 1; i< 4; i++){
+        for(int i = 1; i < 4; i++)
             frames.add(new TextureRegion(screen.getAtlas().findRegion("little_mario"), i*16, 0,16,16));
 
-            marioRun = new Animation<TextureRegion>(0.1f, frames);
-            frames.clear();
-        }
+        marioRun = new Animation<TextureRegion>(0.1f, frames);
+        frames.clear();
 
-        for(int i = 4; i< 6; i++){
+        for(int i = 4; i< 6; i++)
             frames.add(new TextureRegion(screen.getAtlas().findRegion("little_mario"), i*16, 0,16,16));
 
-            marioJump = new Animation(0.1f, frames);
-            frames.clear();
-        }
+        marioJump = new Animation(0.1f, frames);
+        frames.clear();
+
 
         this.world = world;
         defineMario();
@@ -69,9 +68,10 @@ public class Mario extends Sprite {
         switch (currentState){
             case JUMPING:
                     region = marioJump.getKeyFrame(stateTimer);
+
                 break;
             case RUNNING:
-                region = marioRun.getKeyFrame(stateTimer);
+                region = marioRun.getKeyFrame(stateTimer, true);
                 break;
             case FALLING:
             case STANDING:
@@ -94,7 +94,7 @@ public class Mario extends Sprite {
     }
 
     public State getState(){
-        if((b2body.getLinearVelocity().y > 0  || b2body.getLinearVelocity().y < 0) && previousState == State.JUMPING)
+        if(b2body.getLinearVelocity().y > 0  || (b2body.getLinearVelocity().y < 0 && previousState == State.JUMPING))
             return State.JUMPING;
         else if(b2body.getLinearVelocity().y < 0)
             return State.FALLING;
