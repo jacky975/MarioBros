@@ -4,6 +4,7 @@ import com.baconcow.mariobros.MarioBros;
 import com.baconcow.mariobros.Scenes.Hud;
 import com.baconcow.mariobros.sprite.Mario;
 import com.baconcow.mariobros.tools.B2WorldCreator;
+import com.baconcow.mariobros.tools.WorldContactListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -92,6 +93,8 @@ public class PlayScreen implements Screen {
         world = new World(new Vector2(0,-10), true);
         player = new Mario(world, this);
         b2dr = new Box2DDebugRenderer();
+
+        world.setContactListener(new WorldContactListener());
 
         new B2WorldCreator(world, map);
     }
