@@ -71,7 +71,7 @@ public class Mario extends Sprite {
             case JUMPING:
                     region = marioJump.getKeyFrame(stateTimer);
 
-                break;
+                    break;
             case RUNNING:
                 region = marioRun.getKeyFrame(stateTimer, true);
                 break;
