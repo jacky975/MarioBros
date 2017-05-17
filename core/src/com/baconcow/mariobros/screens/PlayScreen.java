@@ -8,6 +8,7 @@ import com.baconcow.mariobros.tools.WorldContactListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -45,6 +46,8 @@ public class PlayScreen implements Screen {
     private Viewport gamePort;
     private Hud hud;
     private TextureAtlas atlas;
+
+    private Music music;
 
     private TmxMapLoader mapLoader;
     private TiledMap map;
@@ -98,7 +101,12 @@ public class PlayScreen implements Screen {
 
         world.setContactListener(new WorldContactListener());
 
+        music = MarioBros.manager.get("audio/music/mario_music.ogg", Music.class);
+        music.setLooping(true);
+        music.play();
+
         new B2WorldCreator(world, map);
+
     }
 
     @Override
