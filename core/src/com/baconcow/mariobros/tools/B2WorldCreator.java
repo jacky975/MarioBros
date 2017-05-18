@@ -1,6 +1,7 @@
 package com.baconcow.mariobros.tools;
 
 import com.baconcow.mariobros.MarioBros;
+import com.baconcow.mariobros.screens.PlayScreen;
 import com.baconcow.mariobros.sprite.Brick;
 import com.baconcow.mariobros.sprite.Coin;
 import com.badlogic.gdx.maps.MapObject;
@@ -18,7 +19,9 @@ import com.badlogic.gdx.physics.box2d.World;
  */
 
 public class B2WorldCreator {
-    public B2WorldCreator(World world, TiledMap map) {
+    public B2WorldCreator(PlayScreen screen) {
+        World world = screen.getWorld();
+        TiledMap map = screen.getMap();
 
         BodyDef bdef = new BodyDef();
         PolygonShape shape = new PolygonShape();
@@ -49,18 +52,19 @@ public class B2WorldCreator {
 
             shape.setAsBox((rect.getWidth()/2)/ MarioBros.PPM, (rect.getHeight()/2)/ MarioBros.PPM);
             fdef.shape = shape;
+            fdef.filter.categoryBits = MarioBros.OBJECT_BIT;
             body.createFixture(fdef);
         }
 
         for(MapObject obj : map.getLayers().get(5).getObjects().getByType(RectangleMapObject.class)){
             Rectangle rect = ((RectangleMapObject) obj).getRectangle();
 
-            new Brick(world, map, rect);
+            new Brick(screen, rect);
         }
         for(MapObject obj : map.getLayers().get(4).getObjects().getByType(RectangleMapObject.class)){
             Rectangle rect = ((RectangleMapObject) obj).getRectangle();
 
-            new Coin(world, map ,rect );
+            new Coin(screen ,rect );
         }
     }
 }

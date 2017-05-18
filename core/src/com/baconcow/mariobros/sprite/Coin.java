@@ -2,6 +2,7 @@ package com.baconcow.mariobros.sprite;
 
 import com.baconcow.mariobros.MarioBros;
 import com.baconcow.mariobros.Scenes.Hud;
+import com.baconcow.mariobros.screens.PlayScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -29,8 +30,8 @@ public class Coin extends InteractiveTileObject{
 
     }
 
-    public Coin(World world, TiledMap map, Rectangle bounds) {
-        super(world, map, bounds);
+    public Coin(PlayScreen screen, Rectangle bounds) {
+        super(screen, bounds);
 
         tileSet = map.getTileSets().getTileSet("tileset_gutter");
         fixture.setUserData(this);

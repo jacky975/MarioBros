@@ -2,6 +2,7 @@ package com.baconcow.mariobros.screens;
 
 import com.baconcow.mariobros.MarioBros;
 import com.baconcow.mariobros.Scenes.Hud;
+import com.baconcow.mariobros.sprite.Goomba;
 import com.baconcow.mariobros.sprite.Mario;
 import com.baconcow.mariobros.tools.B2WorldCreator;
 import com.baconcow.mariobros.tools.WorldContactListener;
@@ -56,6 +57,8 @@ public class PlayScreen implements Screen {
     private World world;
     private Box2DDebugRenderer b2dr;
 
+    private Goomba goomba;
+
     public void handleInput(float dt){
         if(Gdx.input.isKeyJustPressed(Input.Keys.UP)){
             if(player.b2body.getLinearVelocity().y == 0)
@@ -72,6 +75,7 @@ public class PlayScreen implements Screen {
     public void update(float dt){
         handleInput(dt);
         hud.update(dt);
+        goomba.update(dt);
 
         player.update(dt);
         world.step(1/60f, 6 ,2);
@@ -96,7 +100,7 @@ public class PlayScreen implements Screen {
         gamecam.position.set(gamePort.getWorldWidth()/2, gamePort.getWorldHeight() /2,0);
 
         world = new World(new Vector2(0,-10), true);
-        player = new Mario(world, this);
+        player = new Mario(this);
         b2dr = new Box2DDebugRenderer();
 
         world.setContactListener(new WorldContactListener());
@@ -105,7 +109,9 @@ public class PlayScreen implements Screen {
         music.setLooping(true);
         music.play();
 
-        new B2WorldCreator(world, map);
+        goomba = new Goomba(this, .32f, .32f);
+
+        new B2WorldCreator(this);
 
     }
 
@@ -127,6 +133,7 @@ public class PlayScreen implements Screen {
         game.batch.setProjectionMatrix(gamecam.combined);
         game.batch.begin();
         player.draw(game.batch);
+        goomba.draw(game.batch);
         game.batch.end();
 
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
@@ -164,5 +171,13 @@ public class PlayScreen implements Screen {
         world.dispose();
         b2dr.dispose();
         hud.dispose();
+    }
+
+    public TiledMap getMap(){
+        return map;
+    }
+
+    public World getWorld(){
+        return world;
     }
 }

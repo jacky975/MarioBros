@@ -2,6 +2,7 @@ package com.baconcow.mariobros.sprite;
 
 import com.baconcow.mariobros.MarioBros;
 import com.baconcow.mariobros.Scenes.Hud;
+import com.baconcow.mariobros.screens.PlayScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -15,8 +16,8 @@ import com.badlogic.gdx.physics.box2d.World;
 
 public class Brick extends InteractiveTileObject{
     private Music music;
-    public Brick(World world, TiledMap map, Rectangle bounds) {
-        super(world, map, bounds);
+    public Brick(PlayScreen screen, Rectangle bounds) {
+        super(screen, bounds);
         fixture.setUserData(this);
         setCategoryFilter(MarioBros.BRICK_BIT);
     }
