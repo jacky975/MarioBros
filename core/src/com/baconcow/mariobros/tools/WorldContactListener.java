@@ -1,7 +1,7 @@
 package com.baconcow.mariobros.tools;
 
 import com.baconcow.mariobros.MarioBros;
-import com.baconcow.mariobros.sprite.Enemy;
+import com.baconcow.mariobros.sprite.Enemies.Enemy;
 import com.baconcow.mariobros.sprite.InteractiveTileObject;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.Contact;
@@ -33,8 +33,29 @@ public class WorldContactListener implements ContactListener{
             case MarioBros.ENEMY_HEAD_BIT | MarioBros.MARIO_BIT:
                     if (fixA.getFilterData().categoryBits == MarioBros.ENEMY_HEAD_BIT)
                         ((Enemy) fixA.getUserData()).hitOnHead();
-                    else if (fixB.getFilterData().categoryBits == MarioBros.ENEMY_HEAD_BIT)
+                    else
                         ((Enemy) fixB.getUserData()).hitOnHead();
+                break;
+            case MarioBros.ENEMY_BIT | MarioBros.OBJECT_BIT:
+                if (fixA.getFilterData().categoryBits == MarioBros.ENEMY_BIT)
+                    ((Enemy) fixA.getUserData()).reverseVelocity(true, false);
+                else
+                    ((Enemy) fixB.getUserData()).reverseVelocity(true, false);
+                break;
+            case MarioBros.MARIO_BIT | MarioBros.ENEMY_BIT:
+                Gdx.app.log("MARIO", " DIED");
+                break;
+            case MarioBros.ENEMY_BIT | MarioBros.ENEMY_BIT:
+                ((Enemy) fixA.getUserData()).reverseVelocity(true, false);
+                ((Enemy) fixB.getUserData()).reverseVelocity(true, false);
+                break;
+            case MarioBros.ENEMY_BIT | MarioBros.GROUND_BIT:
+                if(fixA.getFilterData().categoryBits == MarioBros.ENEMY_BIT)
+                    ((Enemy) fixA.getUserData()).reverseVelocity(true, false);
+                else
+                    ((Enemy) fixB.getUserData()).reverseVelocity(true, false);
+
+
         }
     }
 

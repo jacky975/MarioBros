@@ -2,7 +2,7 @@ package com.baconcow.mariobros.screens;
 
 import com.baconcow.mariobros.MarioBros;
 import com.baconcow.mariobros.Scenes.Hud;
-import com.baconcow.mariobros.sprite.Goomba;
+import com.baconcow.mariobros.sprite.Enemies.Enemy;
 import com.baconcow.mariobros.sprite.Mario;
 import com.baconcow.mariobros.tools.B2WorldCreator;
 import com.baconcow.mariobros.tools.WorldContactListener;
@@ -14,25 +14,14 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.maps.MapObject;
-import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-
-import static com.badlogic.gdx.utils.JsonValue.ValueType.object;
 
 /**
  * Created by jacky975 on 5/13/17.
@@ -56,8 +45,7 @@ public class PlayScreen implements Screen {
 
     private World world;
     private Box2DDebugRenderer b2dr;
-
-    private Goomba goomba;
+    private B2WorldCreator creator;
 
     public void handleInput(float dt){
         if(Gdx.input.isKeyJustPressed(Input.Keys.UP)){
@@ -75,7 +63,6 @@ public class PlayScreen implements Screen {
     public void update(float dt){
         handleInput(dt);
         hud.update(dt);
-        goomba.update(dt);
 
         player.update(dt);
         world.step(1/60f, 6 ,2);
@@ -84,6 +71,13 @@ public class PlayScreen implements Screen {
 
         gamecam.update();
         renderer.setView(gamecam);
+
+        for(Enemy enemy : creator.getGoombas()){
+            enemy.update(dt);
+            if(enemy.getX() < player.getX() + 224 / MarioBros.PPM){
+                enemy.b2body.setActive(true);
+            }
+        }
     }
 
     public PlayScreen(MarioBros game) {
@@ -109,9 +103,7 @@ public class PlayScreen implements Screen {
         music.setLooping(true);
         music.play();
 
-        goomba = new Goomba(this, .32f, .32f);
-
-        new B2WorldCreator(this);
+        creator = new B2WorldCreator(this);
 
     }
 
@@ -133,7 +125,9 @@ public class PlayScreen implements Screen {
         game.batch.setProjectionMatrix(gamecam.combined);
         game.batch.begin();
         player.draw(game.batch);
-        goomba.draw(game.batch);
+        for(Enemy enemy : creator.getGoombas()){
+            enemy.draw(game.batch);
+        }
         game.batch.end();
 
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);

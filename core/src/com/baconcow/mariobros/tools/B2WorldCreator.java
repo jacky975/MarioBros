@@ -4,6 +4,7 @@ import com.baconcow.mariobros.MarioBros;
 import com.baconcow.mariobros.screens.PlayScreen;
 import com.baconcow.mariobros.sprite.Brick;
 import com.baconcow.mariobros.sprite.Coin;
+import com.baconcow.mariobros.sprite.Enemies.Goomba;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -13,12 +14,14 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 
 /**
  * Created by jacky975 on 5/14/17.
  */
 
 public class B2WorldCreator {
+    private Array<Goomba> goombas;
     public B2WorldCreator(PlayScreen screen) {
         World world = screen.getWorld();
         TiledMap map = screen.getMap();
@@ -39,6 +42,7 @@ public class B2WorldCreator {
 
             shape.setAsBox((rect.getWidth()/2)/ MarioBros.PPM, (rect.getHeight()/2)/ MarioBros.PPM);
             fdef.shape = shape;
+            fdef.filter.categoryBits = MarioBros.GROUND_BIT;
             body.createFixture(fdef);
         }
         //pipes
@@ -66,5 +70,16 @@ public class B2WorldCreator {
 
             new Coin(screen ,rect );
         }
+
+        goombas = new Array<Goomba>();
+        for(MapObject obj : map.getLayers().get(6).getObjects().getByType(RectangleMapObject.class)){
+            Rectangle rect = ((RectangleMapObject) obj).getRectangle();
+
+            goombas.add(new Goomba(screen ,rect.getX(), rect.getY()));
+        }
+    }
+
+    public Array<Goomba> getGoombas() {
+        return goombas;
     }
 }
